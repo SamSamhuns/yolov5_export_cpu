@@ -2,7 +2,7 @@
 
 Documentation on exporting YOLOv5 models for fast CPU inference
 
-## Clone and set up the Official YOLOv5 GitHub repository
+## 1. Clone and set up the Official YOLOv5 GitHub repository
 
 All package installations should be done in a virtualenv or conda env to prevent package conflict errors.
 
@@ -13,7 +13,7 @@ $ pip install -r requirements.txt                                    # base requ
 $ pip install "coremltools>=4.1" "onnx>=1.9.0" scikit-learn==0.19.2  # export requirements
 ```
 
-## Export a Trained YOLOv5 Model as ONNX
+## 2. Export a Trained YOLOv5 Model as ONNX
 
 Export a pre-trained or custom trained YOLOv5 model to generate the respective ONNX, TorchScript and CoreML formats of the model. The pre-trained `yolov5s.pt` is the lightest and fastest model for CPU inference. Other slower but more accurate models include `yolov5m.pt, yolov5l.pt` and `yolov5x.pt`. All available model details at Ultralytics YOLOv5 [README](https://github.com/ultralytics/yolov5#pretrained-checkpoints).
 
@@ -39,14 +39,14 @@ Install required requirements for onnx and openvino Inference
 $ pip install -r inf_requirements.txt
 ```
 
-### Test YOLOv5 ONNX model inference
+## 3. Test YOLOv5 ONNX model inference
 
 ```bash
 $ python detect_onnx.py -i <IMG_FILE_PATH/IMG_DIR_PATH/VID_PATH_FILE>
 # python detect_onnx.py -h for more info
 ```
 
-## Get OpenVINO Docker Image
+## 4. Download Docker and OpenVINO Docker Image
 
 Install docker in your system and run the OpenVINO dev docker image. The `yolov5` directory containing the ONNX model must be in the current working directory.
 
@@ -57,7 +57,7 @@ docker run -it --rm \
             /bin/bash -c "cd /home/openvino/; bash"
 ```
 
-### Export ONNX model to an OpenVINO IR representation
+## 5. Export ONNX model to an OpenVINO IR representation
 
 ```bash
 # inside the openvino docker container
@@ -72,8 +72,12 @@ $ exit
 
 [Full OpenVINO export options](https://docs.openvinotoolkit.org/latest/openvino_docs_MO_DG_prepare_model_convert_model_Converting_Model_General.html)
 
-### Test YOLOv5 OpenVINO IR model CPU inference
+## 6. Test YOLOv5 OpenVINO IR model CPU inference
 
 ```bash
 $ python detect_openvino.py -i <IMG_FILE_PATH/IMG_DIR_PATH/VID_PATH_FILE>
 ```
+
+docker run -p 127.0.0.1:5665:5665 \
+                --name workbench \
+                -it openvino/workbench:latest
