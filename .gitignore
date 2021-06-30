@@ -151,3 +151,6 @@ output
 *.bin
 *.xml
 *.mapping
+
+# mac os fsystem files
+*.DS_Store
