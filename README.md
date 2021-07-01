@@ -69,7 +69,9 @@ Optional: To convert the all frames in the `output` directory into a mp4 video u
 <details>
   <summary>OpenVINO Docker</summary>
 
-Install docker in your system and run the OpenVINO dev docker image. The `yolov5` directory containing the ONNX model must be in the current working directory.
+[Install docker](https://docs.docker.com/get-docker/) in your system if not already installed.
+
+Pass the docker run command below in a terminal which will automatically download the OpenVINO Docker Image and run it. The `models` directory containing the ONNX model must be in the current working directory.
 
 ```bash
 docker run -it --rm \
@@ -84,6 +86,8 @@ docker run -it --rm \
 
 <details>
   <summary>OpenVINO IR Export</summary>
+
+This will create the OpenVINO Intermediate Model Representation (IR) model files (xml and bin) in the directory `models/yolov5_openvino` which will be available in the host system outside the docker container.
 
 ```bash
 # inside the openvino docker container
