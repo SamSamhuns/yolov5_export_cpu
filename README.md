@@ -2,6 +2,10 @@
 
 Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework
 
+## Google Colab Conversion
+
+Convert yolov5 model to IR format in [Google Colab](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing) [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing)
+
 ## 1. Clone and set up the Official YOLOv5 GitHub repository
 
 <details>
@@ -89,10 +93,13 @@ docker run -it --rm \
 
 This will create the OpenVINO Intermediate Model Representation (IR) model files (xml and bin) in the directory `models/yolov5_openvino` which will be available in the host system outside the docker container.
 
+**Important Note:** --input_shape must be provided and match the img shape used to export onnx model. Batching is also not supported for CPU inference
+
 ```bash
 # inside the openvino docker container
 $ python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo.py \
           --progress \
+          --input_shape [1,3,640,640] \
           --input_model models/yolov5s.onnx \
           --output_dir models/yolov5_openvino \
           --data_type half # {FP16,FP32,half,float}
