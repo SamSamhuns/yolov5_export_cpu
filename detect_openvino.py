@@ -79,7 +79,7 @@ def inference(args) -> None:
     print("Output Layer: ", OutputLayer)
     print("Model Input Shape: ",
           OVNet.input_info[InputLayer].input_data.shape)
-    print("Model Outptu Shape: ", OVNet.outputs[OutputLayer].shape)
+    print("Model Output Shape: ", OVNet.outputs[OutputLayer].shape)
 
     if args.output_dir is not None:
         os.makedirs(args.output_dir, exist_ok=True)

@@ -27,7 +27,7 @@ def detect_onnx(src_path,
     print("Input Layer: ", session.get_inputs()[0].name)
     print("Output Layer: ", session.get_outputs()[0].name)
     print("Model Input Shape: ", session.get_inputs()[0].shape)
-    print("Model Ouput Shape: ", session.get_outputs()[0].shape)
+    print("Model Output Shape: ", session.get_outputs()[0].shape)
 
     start_time = time.time()
     preprocess_func = partial(preprocess_image, in_size=(in_w, in_h))
