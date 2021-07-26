@@ -34,7 +34,7 @@ def parse_arguments(desc):
                         help='Detection Threshold. Default: 0.6')
     parser.add_argument('-ox', '--onnx_path',
                         default="models/yolov5s.onnx",  type=str,
-                        help='Path to ONNX model. efault: yolov5/yolov5s.onnx')
+                        help='Path to ONNX model. Default: yolov5/yolov5s.onnx')
     parser.add_argument('-o', '--output_dir',
                         default='output',  type=str,
                         help='Output directory. Default: output')

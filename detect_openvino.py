@@ -19,23 +19,23 @@ def parse_arguments(desc):
                         help='Path to Input: Video File or Image file')
     parser.add_argument('--model_xml',
                         default='models/yolov5_openvino/yolov5s.xml',
-                        help='OpenVINO XML File')
+                        help='OpenVINO XML File. Default: models/yolov5_openvino/yolov5s.xml')
     parser.add_argument('--model_bin',
                         default='models/yolov5_openvino/yolov5s.bin',
-                        help='OpenVINO BIN File')
+                        help='OpenVINO BIN File. Default: models/yolov5_openvino/yolov5s.bin')
     parser.add_argument('-d', '--target_device',
                         default='CPU', type=str,
-                        help='Target Plugin: CPU, GPU, FPGA, MYRIAD, MULTI:CPU,GPU, HETERO:FPGA,CPU')
+                        help='Target Plugin: CPU, GPU, FPGA, MYRIAD, MULTI:CPU,GPU, HETERO:FPGA,CPU. Default: CPU')
     parser.add_argument('-m', '--media_type',
                         default='image', type=str,
                         choices=('image', 'video'),
                         help='Type of Input: image, video')
     parser.add_argument('-o', '--output_dir',
                         default='output',  type=str,
-                        help='Output directory')
+                        help='Output directory. Default: output')
     parser.add_argument('-t', '--threshold',
                         default=0.6,  type=float,
-                        help='Object Detection Accuracy Threshold')
+                        help='Object Detection Accuracy Threshold. Default: 0.6')
 
     return parser.parse_args()
 
