@@ -1,10 +1,10 @@
 # YOLOv5 CPU Export and OpenVINO Inference
 
-Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework
+Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on v5.0 release)
 
 ## Google Colab Conversion
 
-Convert yolov5 model to IR format in [Google Colab](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing) [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing)
+Convert yolov5 model to IR format in [Google Colab](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing) [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing) (Recommended)
 
 ## 1. Clone and set up the Official YOLOv5 GitHub repository
 
@@ -17,7 +17,6 @@ Convert yolov5 model to IR format in [Google Colab](https://colab.research.googl
 $ git clone https://github.com/ultralytics/yolov5                    # clone repo
 $ cd yolov5
 $ pip install -r requirements.txt                                    # base requirements
-$ pip install "coremltools>=4.1" "onnx>=1.9.0" scikit-learn==0.19.2  # export requirements
 ```
 
 </details>
@@ -33,10 +32,10 @@ A custom training checkpoint i.e. `runs/exp/weights/best.pt` can be used for con
 
 ```bash
 # export a pre-trained light yolov5s.pt model at 640x640 with batch size 1
-$ python export.py --weights yolov5s.pt --img 640 --batch 1
+$ python export.py --weights yolov5s.pt --include onnx --img 640 --batch 1
 # export a custom checkpoint for dynamic input shape {BATCH_SIZE, 3, HEIGHT, WIDTH}
 # Note, for CPU inference mode, BATCH_SIZE must be set to 1
-$ python export.py --weights runs/exp/weights/best.pt --dynamic --simplify
+$ python export.py --weights runs/exp/weights/best.pt --include onnx  --dynamic --simplify
 ```
 
 Move the onnx model to `models` directory
