@@ -1,6 +1,6 @@
 # YOLOv5 CPU Export and OpenVINO Inference
 
-Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on v5.0 release)
+Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to August 16, 2021)
 
 ## Google Colab Conversion
 
