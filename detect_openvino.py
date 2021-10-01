@@ -12,7 +12,6 @@ from utils.detector_utils import save_output, non_max_suppression, preprocess_im
 
 
 def parse_arguments(desc):
-    # Parse Arguments
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('-i', '--input_path',
                         required=True,  type=str,

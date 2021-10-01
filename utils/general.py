@@ -5,7 +5,6 @@ from typing import Callable
 
 import cv2
 import numpy as np
-from PIL import Image
 
 
 # mscoco class names
@@ -92,14 +91,14 @@ class DataStreamer(object):
         orig_img = None
         if self.media_type == 'image':
             if self.idx < len(self.img_path_list):
-                orig_img = Image.open(self.img_path_list[self.idx])
+                orig_img = orig_img[..., ::-1]
+                orig_img = cv2.imread(self.img_path_list[self.idx])
                 self.idx += 1
         elif self.media_type == 'video':
             if self.idx < len(self.vid_path_list):
                 ret, frame = self.vcap.read()
                 if ret:
-                    orig_img = Image.fromarray(
-                        cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                    orig_img = frame[..., ::-1]
                 else:
                     self.idx += 1
         if orig_img is not None:

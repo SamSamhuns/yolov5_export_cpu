@@ -3,18 +3,16 @@ import time
 import torch
 import torchvision
 import numpy as np
-from PIL import Image
 
 from utils.general import CLASS_LABELS
 
 
-def preprocess_image(pil_image, in_size=(640, 640)):
-    """preprocesses PIL image and returns a norm np.ndarray
-    pil_image = pillow image
-    in_size: in_width, in_height
+def preprocess_image(cv2_img, in_size=(640, 640)):
+    """preprocesses cv2 image and returns a norm np.ndarray
+        cv2_img = cv2 image
+        in_size: in_width, in_height
     """
-    in_w, in_h = in_size
-    resized = letterbox_image(pil_image, (in_w, in_h))
+    resized = pad_resize_image(cv2_img, in_size)
     img_in = np.transpose(resized, (2, 0, 1)).astype(np.float32)  # HWC -> CHW
     img_in /= 255.0
     return img_in
@@ -282,17 +280,32 @@ def non_max_suppression(prediction, conf_thres=0.25, iou_thres=0.45, classes=Non
     return output
 
 
-def letterbox_image(image, size):
-    iw, ih = image.size
-    w, h = size
-    scale = min(w / iw, h / ih)
-    nw = int(iw * scale)
-    nh = int(ih * scale)
-
-    image = image.resize((nw, nh), Image.BICUBIC)
-    new_image = Image.new('RGB', size, (128, 128, 128))
-    new_image.paste(image, ((w - nw) // 2, (h - nh) // 2))
-    return new_image
+def pad_resize_image(cv2_img, new_size=(640, 480), color=(125, 125, 125)) -> np.ndarray:
+    """
+    resize and pad image with color if necessary, maintaining orig scale
+    args:
+        cv2_img: numpy.ndarray = cv2 image
+        new_size: tuple(int, int) = (width, height)
+        color: tuple(int, int, int) = (B, G, R)
+    """
+    in_h, in_w = cv2_img.shape[:2]
+    new_w, new_h = new_size
+    # rescale down
+    scale = min(new_w / in_w, new_h / in_h)
+    # get new sacled widths and heights
+    scale_new_w, scale_new_h = int(in_w * scale), int(in_h * scale)
+    resized_img = cv2.resize(cv2_img, (scale_new_w, scale_new_h))
+    # calculate deltas for padding
+    d_w = max(new_w - scale_new_w, 0)
+    d_h = max(new_h - scale_new_h, 0)
+    # center image with padding on top/bottom or left/right
+    top, bottom = d_h // 2, d_h - (d_h // 2)
+    left, right = d_w // 2, d_w - (d_w // 2)
+    pad_resized_img = cv2.copyMakeBorder(resized_img,
+                                         top, bottom, left, right,
+                                         cv2.BORDER_CONSTANT,
+                                         value=color)
+    return pad_resized_img
 
 
 def clip_coords(boxes, img_shape):
@@ -312,7 +325,8 @@ def clip_coords(boxes, img_shape):
 def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
     # Rescale coords (xyxy) from img1_shape to img0_shape
     if ratio_pad is None:  # calculate from img0_shape
-        gain = max(img1_shape) / max(img0_shape)  # gain  = old / new
+        gain = min(img1_shape[0] / img0_shape[0],
+                   img1_shape[1] / img0_shape[1])
         pad = (img1_shape[1] - img0_shape[1] * gain) / \
             2, (img1_shape[0] - img0_shape[0] * gain) / 2  # wh padding
     else:
