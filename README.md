@@ -1,6 +1,8 @@
 # YOLOv5 CPU Export and OpenVINO Inference
 
-Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to August 16, 2021)
+Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to August 16, 2021).
+
+**Note: OpenVINO currently only works with commits up to August 16, 2021. Commit SHA1 is f3e3f7603fca56e52f3f055d8bbb5847a73e3e78**
 
 ## Google Colab Conversion
 
@@ -16,6 +18,7 @@ Convert yolov5 model to IR format in [Google Colab](https://colab.research.googl
 ```bash
 $ git clone https://github.com/ultralytics/yolov5                    # clone repo
 $ cd yolov5
+$ git reset --hard f3e3f7603fca56e52f3f055d8bbb5847a73e3e78          # commit id for commit as of Aug 16, 2021
 $ pip install -r requirements.txt                                    # base requirements
 ```
 
