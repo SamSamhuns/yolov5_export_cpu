@@ -91,8 +91,8 @@ class DataStreamer(object):
         orig_img = None
         if self.media_type == 'image':
             if self.idx < len(self.img_path_list):
-                orig_img = orig_img[..., ::-1]
                 orig_img = cv2.imread(self.img_path_list[self.idx])
+                orig_img = orig_img[..., ::-1]
                 self.idx += 1
         elif self.media_type == 'video':
             if self.idx < len(self.vid_path_list):
