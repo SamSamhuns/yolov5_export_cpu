@@ -1,8 +1,6 @@
 # YOLOv5 CPU Export and OpenVINO Inference
 
-Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to August 16, 2021).
-
-**Note: OpenVINO currently only works with commits up to August 16, 2021. Commit SHA1 is f3e3f7603fca56e52f3f055d8bbb5847a73e3e78**
+Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to June 6, 2022).
 
 ## Google Colab Conversion
 
@@ -18,7 +16,6 @@ Convert yolov5 model to IR format in [Google Colab](https://colab.research.googl
 ```bash
 $ git clone https://github.com/ultralytics/yolov5                    # clone repo
 $ cd yolov5
-$ git reset --hard f3e3f7603fca56e52f3f055d8bbb5847a73e3e78          # commit id for commit as of Aug 16, 2021
 $ pip install -r requirements.txt                                    # base requirements
 ```
 
@@ -80,10 +77,10 @@ Optional: To convert the all frames in the `output` directory into a mp4 video u
 Pass the docker run command below in a terminal which will automatically download the OpenVINO Docker Image and run it. The `models` directory containing the ONNX model must be in the current working directory.
 
 ```bash
-docker run -it --rm \
-            -v $PWD/models:/home/openvino/models \
-            openvino/ubuntu18_dev:latest \
-            /bin/bash -c "cd /home/openvino/; bash"
+$ docker run -it --rm \
+             -v $PWD/models:/home/openvino/models \
+             openvino/ubuntu18_dev:latest \
+             /bin/bash -c "cd /home/openvino/; bash"
 ```
 
 </details>
@@ -95,17 +92,17 @@ docker run -it --rm \
 
 This will create the OpenVINO Intermediate Model Representation (IR) model files (xml and bin) in the directory `models/yolov5_openvino` which will be available in the host system outside the docker container.
 
-**Important Note:** --input_shape must be provided and match the img shape used to export onnx model. Batching is also not supported for CPU inference
+**Important Note:** --input_shape must be provided and match the img shape used to export ONNX model. Batching might not supported for CPU inference
 
 ```bash
-# inside the openvino docker container
-$ python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo.py \
-          --progress \
-          --input_shape [1,3,640,640] \
-          --input_model models/yolov5s.onnx \
-          --output_dir models/yolov5_openvino \
-          --data_type half # {FP16,FP32,half,float}
-# exit openvino docker container
+# inside the OpenVINO docker container
+$ mo \
+  --progress \
+  --input_shape [1,3,640,640] \
+  --input_model models/yolov5s.onnx \
+  --output_dir models/yolov5_openvino \
+  --data_type half # {FP16, FP32, half, float}
+# exit OpenVINO docker container
 $ exit  
 ```
 
