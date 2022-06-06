@@ -11,35 +11,28 @@ from utils.general import DataStreamer
 from utils.detector_utils import save_output, non_max_suppression, preprocess_image
 
 
-def parse_arguments(desc):
+def parse_arguments(desc: str) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-i', '--input_path',
-                        required=True,  type=str,
+    parser.add_argument('-i', '--input_path', dest='input_path', required=True, type=str,
                         help='Path to Input: Video File or Image file')
-    parser.add_argument('--model_xml',
-                        default='models/yolov5_openvino/yolov5s.xml',
-                        help='OpenVINO XML File. Default: models/yolov5_openvino/yolov5s.xml')
-    parser.add_argument('--model_bin',
-                        default='models/yolov5_openvino/yolov5s.bin',
-                        help='OpenVINO BIN File. Default: models/yolov5_openvino/yolov5s.bin')
-    parser.add_argument('-d', '--target_device',
-                        default='CPU', type=str,
-                        help='Target Plugin: CPU, GPU, FPGA, MYRIAD, MULTI:CPU,GPU, HETERO:FPGA,CPU. Default: CPU')
-    parser.add_argument('-m', '--media_type',
-                        default='image', type=str,
+    parser.add_argument('--model_xml', dest='model_xml', default='models/yolov5_openvino/yolov5s.xml',
+                        help='OpenVINO XML File. (default: %(default)s)')
+    parser.add_argument('--model_bin', dest='model_bin', default='models/yolov5_openvino/yolov5s.bin',
+                        help='OpenVINO BIN File. (default: %(default)s)')
+    parser.add_argument('-d', '--target_device', dest='target_device', default='CPU', type=str,
+                        help='Target Plugin: CPU, GPU, FPGA, MYRIAD, MULTI:CPU,GPU, HETERO:FPGA,CPU. (default: %(default)s)')
+    parser.add_argument('-m', '--media_type', dest='media_type', default='image', type=str,
                         choices=('image', 'video'),
-                        help='Type of Input: image, video')
-    parser.add_argument('-o', '--output_dir',
-                        default='output',  type=str,
-                        help='Output directory. Default: output')
-    parser.add_argument('-t', '--threshold',
-                        default=0.6,  type=float,
-                        help='Object Detection Accuracy Threshold. Default: 0.6')
+                        help='Type of Input: image, video. (default: %(default)s)')
+    parser.add_argument('-o', '--output_dir', dest='output_dir', default='output', type=str,
+                        help='Output directory. (default: %(default)s)')
+    parser.add_argument('-t', '--threshold', dest='threshold', default=0.6, type=float,
+                        help='Object Detection Accuracy Threshold. (default: %(default)s)')
 
     return parser.parse_args()
 
 
-def get_openvino_core_net_exec(model_xml_path, model_bin_path, target_device="CPU"):
+def get_openvino_core_net_exec(model_xml_path: str, model_bin_path: str, target_device: str = "CPU"):
     # load IECore object
     OVIE = IECore()
 
@@ -60,7 +53,7 @@ def get_openvino_core_net_exec(model_xml_path, model_bin_path, target_device="CP
     return OVIE, OVNet, OVExec
 
 
-def inference(args) -> None:
+def inference(args: argparse.Namespace) -> None:
     """
     Run Object Detection Application
     """

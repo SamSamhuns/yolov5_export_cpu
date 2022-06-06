@@ -3,11 +3,15 @@ import time
 import torch
 import torchvision
 import numpy as np
+from typing import Tuple, Optional, Union
 
 from utils.general import CLASS_LABELS
 
 
-def preprocess_image(cv2_img, in_size=(640, 640)):
+def preprocess_image(
+    cv2_img: np.ndarray,
+    in_size: Tuple[int, int] = (640, 640)
+) -> np.ndarray:
     """preprocesses cv2 image and returns a norm np.ndarray
         cv2_img = cv2 image
         in_size: in_width, in_height
@@ -18,7 +22,15 @@ def preprocess_image(cv2_img, in_size=(640, 640)):
     return img_in
 
 
-def save_output(detections, image_src, save_path, threshold, model_in_HW, line_thickness=None, text_bg_alpha=0.0):
+def save_output(
+    detections,
+    image_src: np.ndarray,
+    save_path: str,
+    threshold: float,
+    model_in_HW: Tuple[int, int],
+    line_thickness: Optional[int] = None,
+    text_bg_alpha: float = 0.0
+) -> None:
     image_src = cv2.cvtColor(image_src, cv2.COLOR_RGB2BGR)
     labels = detections[..., -1].numpy()
     boxs = detections[..., :4].numpy()
@@ -41,7 +53,8 @@ def save_output(detections, image_src, save_path, threshold, model_in_HW, line_t
             cv2.rectangle(image_src, (x1, y1), (x2, y2), color, thickness=max(
                 int((w + h) / 600), 1), lineType=cv2.LINE_AA)
             label = '%s %.2f' % (CLASS_LABELS[int(labels[i])], confs[i])
-            t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=1)[0]
+            t_size = cv2.getTextSize(
+                label, 0, fontScale=tl / 3, thickness=1)[0]
             c2 = x1 + t_size[0] + 3, y1 - t_size[1] - 5
             if text_bg_alpha == 0.0:
                 cv2.rectangle(image_src, (x1 - 1, y1), c2,
@@ -65,7 +78,11 @@ def save_output(detections, image_src, save_path, threshold, model_in_HW, line_t
     cv2.imwrite(save_path, image_src)
 
 
-def w_bbox_iou(box1, box2, x1y1x2y2=True):
+def w_bbox_iou(
+    box1: torch.Tensor,
+    box2: torch.Tensor,
+    x1y1x2y2: bool = True
+) -> torch.Tensor:
     """
     Calculate IOU
     """
@@ -155,7 +172,10 @@ def w_non_max_suppression(prediction, num_classes, conf_thres=0.5, nms_thres=0.4
     return output
 
 
-def box_iou(box1, box2):
+def box_iou(
+    box1: torch.Tensor,
+    box2: torch.Tensor
+) -> torch.Tensor:
     # https://github.com/pytorch/vision/blob/master/torchvision/ops/boxes.py
     """
     Return intersection-over-union (Jaccard index) of boxes.
@@ -182,7 +202,15 @@ def box_iou(box1, box2):
     return inter / (area1[:, None] + area2 - inter)
 
 
-def non_max_suppression(prediction, conf_thres=0.25, iou_thres=0.45, classes=None, agnostic=False, multi_label=False, labels=()):
+def non_max_suppression(
+    prediction: torch.Tensor,
+    conf_thres: float = 0.25,
+    iou_thres: float = 0.45,
+    classes: Optional[torch.Tensor] = None,
+    agnostic: bool = False,
+    multi_label: bool = False,
+    labels: Tuple[str] = ()
+) -> torch.Tensor:
     """Runs Non-Maximum Suppression (NMS) on inference results
     Returns:
          list of detections, on (n,6) tensor per image [xyxy, conf, cls]
@@ -280,7 +308,11 @@ def non_max_suppression(prediction, conf_thres=0.25, iou_thres=0.45, classes=Non
     return output
 
 
-def pad_resize_image(cv2_img, new_size=(640, 480), color=(125, 125, 125)) -> np.ndarray:
+def pad_resize_image(
+    cv2_img: np.ndarray,
+    new_size: Tuple[int, int] = (640, 480),
+    color: Tuple[int, int, int] = (125, 125, 125)
+) -> np.ndarray:
     """
     resize and pad image with color if necessary, maintaining orig scale
     args:
@@ -308,7 +340,10 @@ def pad_resize_image(cv2_img, new_size=(640, 480), color=(125, 125, 125)) -> np.
     return pad_resized_img
 
 
-def clip_coords(boxes, img_shape):
+def clip_coords(
+    boxes: Union[torch.Tensor, np.ndarray],
+    img_shape: Tuple[int, int]
+) -> None:
     # Clip bounding xyxy bounding boxes to image shape (height, width)
     if isinstance(boxes, torch.Tensor):
         boxes[:, 0].clamp_(0, img_shape[1])  # x1
@@ -322,7 +357,7 @@ def clip_coords(boxes, img_shape):
         boxes[:, 3].clip(0, img_shape[0], out=boxes[:, 3])  # y2
 
 
-def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
+def scale_coords(img1_shape: Tuple[int, int], coords: np.ndarray, img0_shape: Tuple[int, int], ratio_pad=None):
     # Rescale coords (xyxy) from img1_shape to img0_shape
     if ratio_pad is None:  # calculate from img0_shape
         gain = min(img1_shape[0] / img0_shape[0],
@@ -340,7 +375,7 @@ def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
     return coords
 
 
-def xyxy2xywh(x):
+def xyxy2xywh(x: torch.Tensor) -> torch.Tensor:
     # Convert nx4 boxes from [x1, y1, x2, y2] to [x, y, w, h] where xy1=top-left, xy2=bottom-right
     y = torch.zeros_like(x) if isinstance(
         x, torch.Tensor) else np.zeros_like(x)
@@ -351,7 +386,7 @@ def xyxy2xywh(x):
     return y
 
 
-def xywh2xyxy(x):
+def xywh2xyxy(x: torch.Tensor) -> torch.Tensor:
     # Convert nx4 boxes from [x, y, w, h] to [x1, y1, x2, y2] where xy1=top-left, xy2=bottom-right
     y = torch.zeros_like(x) if isinstance(
         x, torch.Tensor) else np.zeros_like(x)

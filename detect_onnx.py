@@ -11,13 +11,13 @@ from utils.detector_utils import save_output, preprocess_image, non_max_suppress
 
 
 @torch.no_grad()
-def detect_onnx(src_path,
-                media_type,
-                threshold=0.6,
-                official=True,
-                onnx_path="models/yolov5s.onnx",
-                output_dir="output",
-                num_classes=80):
+def detect_onnx(src_path: str,
+                media_type: str,
+                threshold: float = 0.6,
+                official: bool = True,
+                onnx_path: str = "models/yolov5s.onnx",
+                output_dir: str = "output",
+                num_classes: int = 80) -> None:
     session = onnxruntime.InferenceSession(onnx_path)
     model_batch_size = session.get_inputs()[0].shape[0]
     model_h = session.get_inputs()[0].shape[2]
@@ -52,7 +52,7 @@ def detect_onnx(src_path,
 
         batch_detections = []
         # model.model[-1].export = boolean ---> True:3 False:4
-        if official and len(outputs) == 4:  # recommended
+        if official:  # recommended
             # model.model[-1].export = False ---> outputs[0] (1, xxxx, 85)
             # Use the official code directly
             batch_detections = torch.from_numpy(np.array(outputs[0]))

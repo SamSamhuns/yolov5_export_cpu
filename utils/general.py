@@ -21,25 +21,19 @@ CLASS_LABELS = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'tr
 
 def parse_arguments(desc):
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('-i', '--input_path',
-                        required=True,  type=str,
+    parser.add_argument('-i', '--input_path', dest='input_path', required=True, type=str,
                         help='Path to Input: Video File or Image file')
-    parser.add_argument('-m', '--media_type',
-                        default='image', type=str,
+    parser.add_argument('-m', '--media_type', dest='media_type', default='image', type=str,
                         choices=('image', 'video'),
-                        help='Type of Input: image, video. Default: image')
-    parser.add_argument('-t', '--threshold',
-                        default=0.6,  type=float,
-                        help='Detection Threshold. Default: 0.6')
-    parser.add_argument('-ox', '--onnx_path',
-                        default="models/yolov5s.onnx",  type=str,
-                        help='Path to ONNX model. Default: yolov5/yolov5s.onnx')
-    parser.add_argument('-o', '--output_dir',
-                        default='output',  type=str,
-                        help='Output directory. Default: output')
-    parser.add_argument('-c', '--num_classes',
-                        default=80,  type=int,
-                        help='Num of classes. Default: 80')
+                        help='Type of Input: image, video. (default: %(default)s)')
+    parser.add_argument('-t', '--threshold', dest='threshold', default=0.6, type=float,
+                        help='Detection Threshold. (default: %(default)s)')
+    parser.add_argument('--ox', '--onnx_path', dest='onnx_path', default="models/yolov5s.onnx", type=str,
+                        help='Path to ONNX model. (default: %(default)s)')
+    parser.add_argument('-o', '--output_dir', dest='output_dir', default='output', type=str,
+                        help='Output directory. (default: %(default)s)')
+    parser.add_argument('-c', '--num_classes', dest='num_classes', default=80, type=int,
+                        help='Num of classes. (default: %(default)s)')
 
     return parser.parse_args()
 
