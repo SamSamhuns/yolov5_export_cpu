@@ -1,10 +1,10 @@
 # YOLOv5 CPU Export and OpenVINO Inference
 
-Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to June 6, 2022).
+Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to June 6, 2022 in docker).
 
 ## Google Colab Conversion
 
-Convert yolov5 model to IR format in [Google Colab](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing) [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing) (Recommended)
+Convert yolov5 model to IR format with Google Colab. [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1K8gnZEka47Gbcp1eJbBaSe3GxngJdvio?usp=sharing) (Recommended)
 
 ## 1. Clone and set up the Official YOLOv5 GitHub repository
 
@@ -35,6 +35,8 @@ A custom training checkpoint i.e. `runs/exp/weights/best.pt` can be used for con
 $ python export.py --weights yolov5s.pt --include onnx --img 640 --batch 1
 # export a custom checkpoint for dynamic input shape {BATCH_SIZE, 3, HEIGHT, WIDTH}
 # Note, for CPU inference mode, BATCH_SIZE must be set to 1
+# install onnx-simplifier for simplifying onnx exports
+$ pip install onnx-simplifier==0.3.10                                
 $ python export.py --weights runs/exp/weights/best.pt --include onnx  --dynamic --simplify
 ```
 
@@ -67,10 +69,49 @@ Optional: To convert the all frames in the `output` directory into a mp4 video u
 
 </details>
 
-## 4. Download Docker and OpenVINO Docker Image
+## 4. Export ONNX to OpenVINO
+
+**Recommended Option A**
+
+### Option A. Use OpenVINO's python dev library
 
 <details>
-  <summary>OpenVINO Docker</summary>
+  <summary> A1. Install OpenVINO python dev library</summary>
+
+  Instructions for setting OpenVINO available [here](https://docs.openvino.ai/latest/openvino_docs_install_guides_install_dev_tools.html)
+
+```bash
+# install required OpenVINO lib to convert ONNX to OpenVINO IR
+$ pip install openvino-dev[onnx]
+```
+
+</details>
+
+<details>
+  <summary> A2. Export ONNX to OpenVINO IR</summary>
+
+This will create the OpenVINO Intermediate Model Representation (IR) model files (xml and bin) in the directory `models/yolov5_openvino`.
+
+**Important Note:** --input_shape must be provided and match the img shape used to export ONNX model. Batching might not supported for CPU inference
+
+```bash
+# export onnx to OpenVINO IR
+$ mo \
+  --progress \
+  --input_shape [1,3,640,640] \
+  --input_model models/yolov5s.onnx \
+  --output_dir models/yolov5_openvino \
+  --data_type half # {FP16, FP32, half, float}
+```
+
+[Full OpenVINO export options](https://docs.openvinotoolkit.org/latest/openvino_docs_MO_DG_prepare_model_convert_model_Converting_Model_General.html)
+
+</details>
+
+### Option B. Use OpenVINO Docker
+
+<details>
+  <summary>B1. Download Docker and OpenVINO Docker Image</summary>
 
 [Install docker](https://docs.docker.com/get-docker/) in your system if not already installed.
 
@@ -85,10 +126,8 @@ $ docker run -it --rm \
 
 </details>
 
-## 5. Export ONNX model to an OpenVINO IR representation
-
 <details>
-  <summary>OpenVINO IR Export</summary>
+  <summary>B2. Export ONNX model to an OpenVINO IR representation</summary>
 
 This will create the OpenVINO Intermediate Model Representation (IR) model files (xml and bin) in the directory `models/yolov5_openvino` which will be available in the host system outside the docker container.
 
@@ -110,7 +149,7 @@ $ exit
 
 </details>
 
-## 6. Test YOLOv5 OpenVINO IR model CPU inference
+## 5. Test YOLOv5 OpenVINO IR model CPU inference
 
 <details>
   <summary>OpenVINO model inference</summary>
