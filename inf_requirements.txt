@@ -1,5 +1,5 @@
-onnxruntime==1.8.0
-opencv-python==4.5.2.54
-openvino==2021.3.0
-torch==1.9.0
-torchvision==0.10.0
+onnxruntime==1.11.1
+opencv-python==4.5.5.64
+openvino==2022.1.0
+torch==1.11.0
+torchvision==0.12.0
