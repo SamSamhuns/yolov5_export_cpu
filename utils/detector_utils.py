@@ -13,6 +13,7 @@ def preprocess_image(
     in_size: Tuple[int, int] = (640, 640)
 ) -> np.ndarray:
     """preprocesses cv2 image and returns a norm np.ndarray
+
         cv2_img = cv2 image
         in_size: in_width, in_height
     """
@@ -83,8 +84,8 @@ def w_bbox_iou(
     box2: torch.Tensor,
     x1y1x2y2: bool = True
 ) -> torch.Tensor:
-    """
-    Calculate IOU
+    """Calculate IOU
+
     """
     if not x1y1x2y2:
         b1_x1, b1_x2 = box1[:, 0] - box1[:, 2] / 2, box1[:, 0] + box1[:, 2] / 2
@@ -176,9 +177,9 @@ def box_iou(
     box1: torch.Tensor,
     box2: torch.Tensor
 ) -> torch.Tensor:
+    """Return intersection-over-union (Jaccard index) of boxes.
+
     # https://github.com/pytorch/vision/blob/master/torchvision/ops/boxes.py
-    """
-    Return intersection-over-union (Jaccard index) of boxes.
     Both sets of boxes are expected to be in (x1, y1, x2, y2) format.
     Arguments:
         box1 (Tensor[N, 4])
@@ -212,6 +213,7 @@ def non_max_suppression(
     labels: Tuple[str] = ()
 ) -> torch.Tensor:
     """Runs Non-Maximum Suppression (NMS) on inference results
+
     Returns:
          list of detections, on (n,6) tensor per image [xyxy, conf, cls]
     """
@@ -313,8 +315,8 @@ def pad_resize_image(
     new_size: Tuple[int, int] = (640, 480),
     color: Tuple[int, int, int] = (125, 125, 125)
 ) -> np.ndarray:
-    """
-    resize and pad image with color if necessary, maintaining orig scale
+    """Resize and pad image with color if necessary, maintaining orig scale
+
     args:
         cv2_img: numpy.ndarray = cv2 image
         new_size: tuple(int, int) = (width, height)

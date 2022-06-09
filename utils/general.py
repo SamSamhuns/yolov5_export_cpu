@@ -39,20 +39,23 @@ def parse_arguments(desc):
 
 
 class DataStreamer(object):
+
     """Iterable DataStreamer class for generating numpy arr images
     Generates orig image and pre-processed image
 
-    Attributes
-    ----------
-    src_path : str
-        path to a single image/video or path to directory containing images
-    media_type : str
-        inference media_type "image" or "video"
-    preprocess_func : Callable function
-        preprocessesing function applied to PIL images
+    For loading data into detectors
     """
 
     def __init__(self, src_path: str, media_type: str = "image", preprocess_func: Callable = None):
+        """Init DataStreamer Obj
+
+        src_path : str
+            path to a single image/video or path to directory containing images
+        media_type : str
+            inference media_type "image" or "video"
+        preprocess_func : Callable function
+            preprocessesing function applied to PIL images
+        """
         if media_type not in {'video', 'image'}:
             raise NotImplementedError(
                 f"{media_type} not supported in streamer. Use video or image")
@@ -82,6 +85,9 @@ class DataStreamer(object):
         return self
 
     def __next__(self):
+        """Get next image or frame as numpy array
+
+        """
         orig_img = None
         if self.media_type == 'image':
             if self.idx < len(self.img_path_list):

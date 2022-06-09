@@ -54,8 +54,9 @@ def get_openvino_core_net_exec(model_xml_path: str, model_bin_path: str, target_
 
 
 def inference(args: argparse.Namespace) -> None:
-    """
-    Run Object Detection Application
+    """Run Object Detection Application
+
+    args: ArgumentParser Namespace
     """
     print("Running Inference for {}: {}".format(args.media_type, args.input_path))
     # Load Network and Executable
@@ -77,7 +78,7 @@ def inference(args: argparse.Namespace) -> None:
         os.makedirs(args.output_dir, exist_ok=True)
 
     start_time = time.time()
-    N, C, H, W = OVNet.input_info[InputLayer].input_data.shape
+    _, C, H, W = OVNet.input_info[InputLayer].input_data.shape
     preprocess_func = partial(preprocess_image, in_size=(W, H))
     data_stream = DataStreamer(args.input_path, args.media_type, preprocess_func)
 
@@ -92,7 +93,6 @@ def inference(args: argparse.Namespace) -> None:
         fps = 1. / (end - start)
         print('Estimated Inference FPS: {} FPS Single Image'.format(fps))
 
-        fh, fw = orig_input.shape[0:2]
         # Write fos, inference info on Image
         text = 'FPS: {}, INF: {}'.format(round(fps, 2), round(inf_time, 2))
         cv2.putText(orig_input, text, (0, 20), cv2.FONT_HERSHEY_COMPLEX,

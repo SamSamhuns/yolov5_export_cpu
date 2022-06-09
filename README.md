@@ -1,5 +1,7 @@
 # YOLOv5 CPU Export and OpenVINO Inference
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/55c3d2e474f14e7b8cb6c611504457d9)](https://www.codacy.com/gh/SamSamhuns/yolov5_export_cpu/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SamSamhuns/yolov5_export_cpu&amp;utm_campaign=Badge_Grade)
+
 Documentation on exporting YOLOv5 models for fast CPU inference using Intel's OpenVINO framework (Tested on commits up to June 6, 2022 in docker).
 
 ## Google Colab Conversion
