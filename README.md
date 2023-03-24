@@ -15,10 +15,19 @@ Convert yolov5 model to IR format with Google Colab. [![Google Colab](https://co
 
   All package installations should be done in a virtualenv or conda env to prevent package conflict errors.
 
+-   Install required requirements for onnx and openvino Inference
+
 ```bash
-$ git clone https://github.com/ultralytics/yolov5                    # clone repo
-$ cd yolov5
-$ pip install -r requirements.txt                                    # base requirements
+pip install --upgrade pip
+pip install -r inf_requirements.txt
+```
+
+-   Clone and install requirements for yolov5 repository
+
+```bash
+git clone https://github.com/ultralytics/yolov5                    # clone repo
+cd yolov5
+pip install -r requirements.txt                                    # base requirements
 ```
 
 </details>
@@ -32,26 +41,23 @@ Export a pre-trained or custom trained YOLOv5 model to generate the respective O
 
 A custom training checkpoint i.e. `runs/exp/weights/best.pt` can be used for conversion as well.
 
+-   Export a pre-trained light yolov5s.pt model at 640x640 with batch size 1
+
 ```bash
-# export a pre-trained light yolov5s.pt model at 640x640 with batch size 1
-$ python export.py --weights yolov5s.pt --include onnx --img 640 --batch 1
-# export a custom checkpoint for dynamic input shape {BATCH_SIZE, 3, HEIGHT, WIDTH}
-# Note, for CPU inference mode, BATCH_SIZE must be set to 1
-# install onnx-simplifier for simplifying onnx exports
-$ pip install onnx-simplifier==0.3.10                                
-$ python export.py --weights runs/exp/weights/best.pt --include onnx  --dynamic --simplify
+python export.py --weights yolov5s.pt --include onnx --img 640 --batch 1
 ```
 
-Move the onnx model to `models` directory
+-   Export a custom checkpoint for dynamic input shape {BATCH_SIZE, 3, HEIGHT, WIDTH}. Note, for CPU inference mode, BATCH_SIZE must be set to 1. Install onnx-simplifier for simplifying onnx exports
 
 ```bash
-$ mv <PATH_TO_ONNX_MODEL> models/
+pip install onnx-simplifier==0.3.10                                
+python export.py --weights runs/exp/weights/best.pt --include onnx  --dynamic --simplify
 ```
 
-Install required requirements for onnx and openvino Inference
+-  Cd to `yolov5_export_cpu` dir and move the onnx model to `yolov5_export_cpu/models` directory
 
 ```bash
-$ pip install -r inf_requirements.txt
+mv <PATH_TO_ONNX_MODEL> yolov5_export_cpu/models/
 ```
 
 </details>
@@ -62,8 +68,8 @@ $ pip install -r inf_requirements.txt
   <summary>ONNX inference</summary>
 
 ```bash
-$ python detect_onnx.py -m image -i <IMG_FILE_PATH/IMG_DIR_PATH>
-$ python detect_onnx.py -m video -i <VID_PATH_FILE>
+python detect_onnx.py -m image -i <IMG_FILE_PATH/IMG_DIR_PATH>
+python detect_onnx.py -m video -i <VID_PATH_FILE>
 # python detect_onnx.py -h for more info
 ```
 
@@ -84,7 +90,7 @@ Optional: To convert the all frames in the `output` directory into a mp4 video u
 
 ```bash
 # install required OpenVINO lib to convert ONNX to OpenVINO IR
-$ pip install openvino-dev[onnx]
+pip install openvino-dev[onnx]
 ```
 
 </details>
@@ -98,7 +104,7 @@ This will create the OpenVINO Intermediate Model Representation (IR) model files
 
 ```bash
 # export onnx to OpenVINO IR
-$ mo \
+mo \
   --progress \
   --input_shape [1,3,640,640] \
   --input_model models/yolov5s.onnx \
@@ -120,10 +126,10 @@ $ mo \
 Pass the docker run command below in a terminal which will automatically download the OpenVINO Docker Image and run it. The `models` directory containing the ONNX model must be in the current working directory.
 
 ```bash
-$ docker run -it --rm \
-             -v $PWD/models:/home/openvino/models \
-             openvino/ubuntu18_dev:latest \
-             /bin/bash -c "cd /home/openvino/; bash"
+docker run -it --rm \
+            -v $PWD/models:/home/openvino/models \
+            openvino/ubuntu18_dev:latest \
+            /bin/bash -c "cd /home/openvino/; bash"
 ```
 
 </details>
@@ -137,14 +143,14 @@ This will create the OpenVINO Intermediate Model Representation (IR) model files
 
 ```bash
 # inside the OpenVINO docker container
-$ mo \
+mo \
   --progress \
   --input_shape [1,3,640,640] \
   --input_model models/yolov5s.onnx \
   --output_dir models/yolov5_openvino \
   --data_type half # {FP16, FP32, half, float}
 # exit OpenVINO docker container
-$ exit  
+exit  
 ```
 
 [Full OpenVINO export options](https://docs.openvinotoolkit.org/latest/openvino_docs_MO_DG_prepare_model_convert_model_Converting_Model_General.html)
@@ -157,8 +163,8 @@ $ exit
   <summary>OpenVINO model inference</summary>
 
 ```bash
-$ python detect_openvino.py -m image -i <IMG_FILE_PATH/IMG_DIR_PATH>
-$ python detect_openvino.py -m video -i <VID_PATH_FILE>
+python detect_openvino.py -m image -i <IMG_FILE_PATH/IMG_DIR_PATH>
+python detect_openvino.py -m video -i <VID_PATH_FILE>
 # python detect_openvino.py -h for more info
 ```
 
