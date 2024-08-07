@@ -108,8 +108,7 @@ mo \
   --progress \
   --input_shape [1,3,640,640] \
   --input_model models/yolov5s.onnx \
-  --output_dir models/yolov5_openvino \
-  --data_type half # {FP16, FP32, half, float}
+  --output_dir models/yolov5_openvino
 ```
 
 [Full OpenVINO export options](https://docs.openvinotoolkit.org/latest/openvino_docs_MO_DG_prepare_model_convert_model_Converting_Model_General.html)
@@ -147,8 +146,7 @@ mo \
   --progress \
   --input_shape [1,3,640,640] \
   --input_model models/yolov5s.onnx \
-  --output_dir models/yolov5_openvino \
-  --data_type half # {FP16, FP32, half, float}
+  --output_dir models/yolov5_openvino
 # exit OpenVINO docker container
 exit  
 ```
